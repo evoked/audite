@@ -1,0 +1,26 @@
+# POST http://localhost:3002/register
+# Content-Type: application/json
+
+# {
+#     "username": "evoked1", 
+#     "email": "332133@3123.com",  
+#     "password": "sdawd"
+# }
+
+POST http://localhost:3002/login
+Content-Type: application/json
+
+{
+    "username": "lasvain", 
+    "password": "sdawd"
+}
+
+
+GET http://localhost:3002/api/forbidden
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.NjA4ODMzY2EzYTkxM2MwNmM1N2NjMjI4.4md2ktky45xNP54OSKlATteJQuguE6sHI3Psbij0KtE
+
+{
+    "username": "lasvain", 
+    "password": "sdawd"
+}
