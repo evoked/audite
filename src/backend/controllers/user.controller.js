@@ -49,6 +49,12 @@ import jwt from 'jsonwebtoken'
     }
 }   
 
+/**
+ * zzz
+ * @param {*} req 
+ * @param {*} res 
+ * @returns {token, message} returns JWT token
+ */
 module.exports.login = async (req, res) => {
     // const { auth } = req.headers
     // if(!auth) return res.status(401).send({ error: `not authorized` })
@@ -110,14 +116,27 @@ module.exports.decodeToken = async (token) => {
 
  module.exports.userByUsername = async (req, res) => {
     /* Call User model function "findOne" to search for a profile. */
-    let username = req.params.username
     try {
-        const user = await User.findOne({ username: username }) 
-        if(user) {
-            return res.status(200).send({ success: `user ${username} found`})
-        } else { 
-            return res.status(404).send({ error: `user ${username} not found` })
-    }} catch (e) {
+        await User.findOne({ username: req.params.username }, (err, user) => {
+            if (user == null) {
+                return res.status(404).send({error: `${req.params.username} not found`})
+            }
+            let {username, _id, created} = user
+            return res.status(200).send({ success: {username, _id, created}})
+        })
+    } catch (e) {
+        return res.status(400).send({ error: `${e}` })
+    }
+}
+
+module.exports.userById = async (req, res) => {
+    let id = req.params.username
+    try {
+        await User.findById(id,(err, user) => {
+            if (err) return console.log(`${err} hello`)
+            return res.status(200).send({success: `${user}`})
+        })
+    } catch (e) {
         return res.status(400).send({ error: `${e}` })
     }
 }
@@ -132,11 +151,17 @@ module.exports.decodeToken = async (token) => {
  */
 
 module.exports.userList = async (req, res) => {
+    let count = 0
     try {
         console.log(req.session)
-        const list = await User.find({}, {_id: 1, username: 1})
+        const list = await User.find({}, 
+            {_id: 1, username: 1, created: 1}, (err, users) => {
+                for(let user in users) {
+                    count++
+                }
+        })
         if(list) {            
-            return res.status(200).send({ success: list })
+            return res.status(200).send({ success: {count, list} })
         } else {
             return res.status(404).send({ error: `users not found` })
         }
