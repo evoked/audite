@@ -50,7 +50,7 @@ app.get('/', (req, res) => {
 })
 
 app.post('/register', register)
-app.get('/user/:username', userById)
+app.get('/user/:username', userByUsername)
 app.get('/users', userList)
 app.post('/login', login
 // , (req,res) => { 
