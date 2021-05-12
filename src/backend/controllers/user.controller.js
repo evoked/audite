@@ -1,5 +1,6 @@
 import User from '../models/UserSchema.model'
 import jwt from 'jsonwebtoken'
+import { reset } from 'nodemon'
 
 /**
  * Create new user based on user input from front-end.
@@ -57,53 +58,69 @@ import jwt from 'jsonwebtoken'
  */
 module.exports.login = async (req, res) => {
     // const { auth } = req.headers
-    // if(!auth) return res.status(401).send({ error: `not authorized` })
+    // if(!auth) return res.status(401).send({ error: `not authorized` })#
+    
     const { username, password} = req.body
+
     if (!username || !password) return res.status(400).send({error: `account details not satisfied`})
-    console.log(username,password)
     
-    const user = await User.find({username: username, password: password})
-    console.log({user})
+    try {
+        const user = await User.find({username: username, password: password})
     
-    if(user) {
-        const token = jwt.sign({data: user[0]._id}, process.env.ACCESS_TOKEN_SECRET)
-        return res.json({token: token, success: `logged in as ${user[0].username}`})
+        if(user) {
+            const token = jwt.sign({data: user[0]._id}, process.env.ACCESS_TOKEN_SECRET)
+            // req.headers.authorization = `Bearer ${token}`
+            // req.locals.auth = `Bearer ${token}`
+            req.session.authorization = `Bearer ${token}`
+            res.status(201).send({token: token, success: `logged in as ${user[0].username}`})
+            return
+        }
+    } catch (e) {
+        
     }
+    
 
     return res.status(401).send({error: `invalid details`})    
 }
 
 module.exports.authenticateToken = async (req, res, next) => {
-    const auth = req.headers['authorization']
-    if(!auth) return res.status(403)
-    // console.log(authHeader)
-    
-    const token = auth.split(' ')[1]
-    console.log(token)
-    
     try {
-        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (error, data) => {            
-            if(error) return res.status(403).send({error: `${error}`})
-            console.log(data)
-            return res.status(200).json({data})
-            // next()
+        if(!req.session.authorization) throw(new Error('no auth'))
+        const auth = req.session.authorization
+    
+        const token = auth.split(' ')[1]
+        let {data} = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
+        
+        await User.findById(data, (err, user) => {
+            if(!user) throw(new Error('user not found, token invalid'))
+            res.locals.user = user
         })
+        
+        return next()
     } catch (e) {
         return res.send({error: `${e}`})
     }
 }
 
 module.exports.getProfile = async (req, res) => {
-    // const authHeader = req.headers['authorization']
-    // if(!authHeader) return res.status(403)
-    // console.log(res.locals)
-    res.send(res.locals)
+    // if(!res.locals.user) res.status(302).redirect('/')
+    if(!req.session.authorization || !res.locals.user) throw(new Error('no auth'))
+
+    let user = res.locals.user
+    
+    try {
+        if(!user) {
+            throw (new Error('user not found'))
+        }
+        return res.status(201).send({user: user})
+    } catch (e) {
+        return res.status(403).send({error: e})
+    }
     
 
 }
 
 module.exports.decodeToken = async (token) => {
-
 }
 
 /**
@@ -134,7 +151,7 @@ module.exports.userById = async (req, res) => {
     try {
         await User.findById(id,(err, user) => {
             if (err) return console.log(`${err} hello`)
-            return res.status(200).send({success: `${user}`})
+            return res.status(200).send({success: {user}})
         })
     } catch (e) {
         return res.status(400).send({ error: `${e}` })
