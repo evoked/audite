@@ -3,10 +3,12 @@ import express from 'express'
 import mongoose from 'mongoose'
 import session from 'express-session'
 import MongoStore from 'connect-mongo'
-import React from 'react'
+// import React from 'react'
 import cors from 'cors'
+import path from 'path'
 import UserSchema from './backend/models/UserSchema.model'
 import userController from './backend/controllers/user.controller'
+import authController from './backend/controllers/authentication.controller'
 // import multer from 'multer'
 
 require("dotenv").config();
@@ -15,7 +17,7 @@ require("dotenv").config();
 const app = express()
 app.use(express.urlencoded({extended: true}))
 app.use(express.json())
-app.use(express.static('public'))
+app.use(express.static(path.join(__dirname, 'public')))
 app.use(cors())
 // app.use(multer)
 
@@ -26,8 +28,7 @@ app.use(function(req, res, next) {
   next();
 });
 
-
-const PORT = process.env.PORT || 3004
+const PORT = process.env.PORT || 3001
 const uri = `mongodb+srv://js:3213215@merncluster.eacb3.mongodb.net/audite?retryWrites=true&w=majority`
 const options = { useNewUrlParser: true, useUnifiedTopology: true }
 
@@ -60,20 +61,16 @@ app.get('/', (req, res) => {
 
 app.post('/register', userController.register)
 app.get('/login', (req, res) => {
-  res.render('./login.html')
+  res.render('login.html')
 })
-app.post('/login', userController.login)
-app.get('/logout', (req, res) => {
-  res.locals = null
-  req.session.authorization = null
-  res.send('you are now logged out')
-})
+app.post('/login', authController.login)
+app.get('/logout', authController.logout)
 app.get('/users', userController.userList)
 app.get('/user/:username', userController.userByUsername)
 
-app.post('/api/forbidden', userController.authenticateToken)
+// app.post('/api/forbidden', userController.authenticateToken)
 
-app.get('/profile', userController.authenticateToken, userController.getProfile)
+app.get('/profile', authController.authenticateToken, userController.getProfile)
 
 // app.all('*', function(req, res) {
 //   res.redirect('/login');

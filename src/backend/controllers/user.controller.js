@@ -1,6 +1,4 @@
 import User from '../models/UserSchema.model'
-import jwt from 'jsonwebtoken'
-import { reset } from 'nodemon'
 
 /**
  * Create new user based on user input from front-end.
@@ -31,9 +29,11 @@ import { reset } from 'nodemon'
         Intentionally only list one if both are true for security reasons. 
         */ 
         if (userExists) {
-            return res.status(409).send({ error: `user ${username} already exists` })
+            // return res.status(409).send({ error: `user ${username} already exists` })
+            throw (new Error({ error: `user ${username} already exists` }))
         } else if (emailExists) {
-            return res.status(409).send({ error:`email ${email} already in use` })
+            // return res.status(409).send({ error:`email ${email} already in use` })
+            throw (new Error({ error:`email ${email} already in use` }))
         }
 
         /* Finally create new user, saved into db, returns with success */
@@ -50,58 +50,6 @@ import { reset } from 'nodemon'
     }
 }   
 
-/**
- * zzz
- * @param {*} req 
- * @param {*} res 
- * @returns {token, message} returns JWT token
- */
-module.exports.login = async (req, res) => {
-    // const { auth } = req.headers
-    // if(!auth) return res.status(401).send({ error: `not authorized` })#
-    
-    const { username, password} = req.body
-
-    if (!username || !password) return res.status(400).send({error: `account details not satisfied`})
-    
-    try {
-        const user = await User.find({username: username, password: password})
-    
-        if(user) {
-            const token = jwt.sign({data: user[0]._id}, process.env.ACCESS_TOKEN_SECRET)
-            // req.headers.authorization = `Bearer ${token}`
-            // req.locals.auth = `Bearer ${token}`
-            req.session.authorization = `Bearer ${token}`
-            res.status(201).send({token: token, success: `logged in as ${user[0].username}`})
-            return
-        }
-    } catch (e) {
-        
-    }
-    
-
-    return res.status(401).send({error: `invalid details`})    
-}
-
-module.exports.authenticateToken = async (req, res, next) => {
-    try {
-        if(!req.session.authorization) throw(new Error('no auth'))
-        const auth = req.session.authorization
-    
-        const token = auth.split(' ')[1]
-        let {data} = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
-        
-        await User.findById(data, (err, user) => {
-            if(!user) throw(new Error('user not found, token invalid'))
-            res.locals.user = user
-        })
-        
-        return next()
-    } catch (e) {
-        return res.send({error: `${e}`})
-    }
-}
-
 module.exports.getProfile = async (req, res) => {
     // if(!res.locals.user) res.status(302).redirect('/')
     if(!req.session.authorization || !res.locals.user) throw(new Error('no auth'))
@@ -116,11 +64,6 @@ module.exports.getProfile = async (req, res) => {
     } catch (e) {
         return res.status(403).send({error: e})
     }
-    
-
-}
-
-module.exports.decodeToken = async (token) => {
 }
 
 /**
@@ -150,7 +93,7 @@ module.exports.userById = async (req, res) => {
     let id = req.params.username
     try {
         await User.findById(id,(err, user) => {
-            if (err) return console.log(`${err} hello`)
+            if (err) throw (new Error(`{user} not found`))
             return res.status(200).send({success: {user}})
         })
     } catch (e) {
@@ -173,12 +116,13 @@ module.exports.userList = async (req, res) => {
         console.log(req.session)
         const list = await User.find({}, 
             {_id: 1, username: 1, created: 1}, (err, users) => {
+                // eslint-disable-next-line no-unused-vars
                 for(let user in users) {
                     count++
                 }
         })
         if(list) {            
-            return res.status(200).send({ success: {count, list} })
+            return res.status(200).send({ data: list })
         } else {
             return res.status(404).send({ error: `users not found` })
         }
