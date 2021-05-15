@@ -52,7 +52,7 @@ import User from '../models/UserSchema.model'
 
 module.exports.getProfile = async (req, res) => {
     // if(!res.locals.user) res.status(302).redirect('/')
-    if(!req.session.authorization || !res.locals.user) throw(new Error('no auth'))
+    if(!req.headers.authorization) throw(new Error('no auth'))
 
     let user = res.locals.user
     

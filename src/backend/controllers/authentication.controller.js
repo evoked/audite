@@ -17,24 +17,26 @@ import jwt from 'jsonwebtoken'
         if (!username || !password) throw (new Error('account details not satisfied'))
 
         const user = await User.find({username: username, password: password})
-    
-        if(user) {
+        console.log(user)
+        if(user.length <1) throw (new Error('user not found'))
+        // if(user) {
             const token = jwt.sign({data: user[0]._id}, process.env.ACCESS_TOKEN_SECRET)
             req.session.authorization = `Bearer ${token}`
             res.status(201).send({token: token, success: `logged in as ${user[0].username}`})
             return
-        }
+        // }
     } catch (e) {
-        return res.status(400).send({error: e})
+        return res.status(404).send({error: `${e}`})
     }
 }
 
 module.exports.authenticateToken = async (req, res, next) => {
     try {
-        if(!req.session.authorization) throw(new Error('no auth'))
-        const auth = req.session.authorization
-    
+        // console.log(req.headers.authorization)
+        const auth = req.headers.authorization
+        
         const token = auth.split(' ')[1]
+        if(token === null) throw new Error('no auth')
         let {data} = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
         
         await User.findById(data, (err, user) => {
