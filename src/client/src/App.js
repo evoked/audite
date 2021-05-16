@@ -9,6 +9,9 @@ import {
 import UsersList from './components/Users.js'
 import Profile from './components/Profile.js'
 import UserLogin from './components/UserLogin.js'
+import NavUser from './components/Nav/NavUser.js'
+import NavGuest from './components/Nav/NavGuest.js'
+import UserRegister from './components/UserRegister.js'
 
 // let URL = process.env.SESSION_URL + process.env.SESSION_PORT
 // {!localStorage.getItem('token') ? 
@@ -18,27 +21,27 @@ import UserLogin from './components/UserLogin.js'
             // : <Route path="/logout">
             //     {localStorage.clear()}
             //   </Route>}
+
+
 class App extends React.Component {
+
   render() {
     return (
       <div className="App">
-          <nav>
-            <Link to="/">Home </Link>
-            <Link to="/profile"> Profile </Link>
-            <Link to="/users"> Users </Link>
-            <Link to="/login"> Login</Link>
-          </nav>
-
+          <NavUser />
           <Switch>
             <Route exact path="/">
               <p>hi</p>
             </Route>
             <Route path="/profile" component={Profile} />
+            <Route path="/user" component={UsersList} />
             <Route path="/users" component={UsersList} />
             <Route path="/login" component={UserLogin} />
+            <Route path="/register" component={UserRegister} />
+            <Route path="*" ><p>404: not found</p></Route>
         </Switch>
       </div>
-    );
+    )
   }
 }
 

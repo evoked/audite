@@ -8,25 +8,26 @@ import jwt from 'jsonwebtoken'
  * @returns {token, message} returns JWT token
  */
  module.exports.login = async (req, res) => {
-    // const { auth } = req.headers
+    // const { authorization } = req.headers
     // if(!auth) return res.status(401).send({ error: `not authorized` })#
     
     const { username, password} = req.body
     
     try {
+        /* Checking server-side if login details are satisfied in order to continue with request 
+         - stops users from using POST to make weird accounts */
         if (!username || !password) throw (new Error('account details not satisfied'))
 
         const user = await User.find({username: username, password: password})
-        console.log(user)
-        if(user.length <1) throw (new Error('user not found'))
-        // if(user) {
-            const token = jwt.sign({data: user[0]._id}, process.env.ACCESS_TOKEN_SECRET)
-            req.session.authorization = `Bearer ${token}`
-            res.status(201).send({token: token, success: `logged in as ${user[0].username}`})
-            return
-        // }
+        /* If no returned users from (.find), then array user will be empty array */
+        if(user.length < 1) throw (new Error('user not found'))
+
+        const token = jwt.sign({data: user[0]._id}, process.env.ACCESS_TOKEN_SECRET)
+        req.session.authorization = `Bearer ${token}`
+        res.status(201).send({token: token, success: `logged in as ${user[0].username}`})
+        return
     } catch (e) {
-        return res.status(404).send({error: `${e}`})
+        return res.status(404).send({error  : `${e}`})
     }
 }
 
@@ -34,9 +35,10 @@ module.exports.authenticateToken = async (req, res, next) => {
     try {
         // console.log(req.headers.authorization)
         const auth = req.headers.authorization
-        
+        console.log(auth)
         const token = auth.split(' ')[1]
-        if(token === null) throw new Error('no auth')
+        console.log(token)
+        if(token === "null") throw (new Error('no auth'))
         let {data} = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
         
         await User.findById(data, (err, user) => {
@@ -46,7 +48,7 @@ module.exports.authenticateToken = async (req, res, next) => {
         
         return next()
     } catch (e) {
-        return res.send({error: `${e}`})
+        return res.status(400).send(`${e}`)
     }
 }
 

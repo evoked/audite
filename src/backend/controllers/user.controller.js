@@ -1,4 +1,5 @@
 import User from '../models/UserSchema.model'
+import CodeError from '../util/errorHandler.js'
 
 /**
  * Create new user based on user input from front-end.
@@ -10,14 +11,10 @@ import User from '../models/UserSchema.model'
 
  module.exports.register = async (req, res) => {
     try {
-        // var privateKey = "31232451"
-        // let token =  await jwt.sign({ foo: 'bar' }, privateKey, { algorithm: 'RS256' }, function(err, token) {
-        //     console.log(token)
-        // })
         let {username, email, password} = req.body
         /* If any request body parameters were left out, return with error. */
         if (!username || !email || !password) {
-            return res.status(400).send({ error: `account credentials not satisfied` })
+            return res.status(400).send(`account credentials not satisfied`)
         }
 
         /* Using mongoDB API to return boolean whether the username or email already exist in the system. */
@@ -29,11 +26,9 @@ import User from '../models/UserSchema.model'
         Intentionally only list one if both are true for security reasons. 
         */ 
         if (userExists) {
-            // return res.status(409).send({ error: `user ${username} already exists` })
-            throw (new Error({ error: `user ${username} already exists` }))
+            return res.status(400).send(`user ${username} already exists`)
         } else if (emailExists) {
-            // return res.status(409).send({ error:`email ${email} already in use` })
-            throw (new Error({ error:`email ${email} already in use` }))
+            return res.status(400).send(`email ${email} already in use`)
         }
 
         /* Finally create new user, saved into db, returns with success */
@@ -42,11 +37,11 @@ import User from '../models/UserSchema.model'
             email: email,
             password: password
         })
-
+        console.log(user + ' successfully created')
         await user.save()
-        return res.status(200).send({ success: `user ${username} has been created` })
+        return res.status(200).send(`user ${username} has been created`)
     } catch(e) {
-        return res.status(400).send({ error: `${e}` })
+        return res.status(400).send(e)
     }
 }   
 
@@ -62,7 +57,8 @@ module.exports.getProfile = async (req, res) => {
         }
         return res.status(201).send({user: user})
     } catch (e) {
-        return res.status(403).send({error: e})
+        console.log(e)
+        return res.status(403).send(e)
     }
 }
 
@@ -85,7 +81,7 @@ module.exports.getProfile = async (req, res) => {
             return res.status(200).send({ success: {username, _id, created}})
         })
     } catch (e) {
-        return res.status(400).send({ error: `${e}` })
+        return res.status(400).send(`${e}` )
     }
 }
 
@@ -93,11 +89,11 @@ module.exports.userById = async (req, res) => {
     let id = req.params.username
     try {
         await User.findById(id,(err, user) => {
-            if (err) throw (new Error(`{user} not found`))
+            if (err) throw (new Error(`${id} not found`))
             return res.status(200).send({success: {user}})
         })
     } catch (e) {
-        return res.status(400).send({ error: `${e}` })
+        return res.status(400).send(`${e}`)
     }
 }
 

@@ -6,7 +6,7 @@ import axios from 'axios'
 const UserLoginAuth = async (username, password, setResponse, token) => {
     try {
         /* If localStorage already includes a token, then nothing is excecuted. */
-        if (localStorage.getItem('token')) return setResponse('already logged in')
+        if (localStorage.getItem('token')) return setResponse('lready logged in')
         /* check if details not satisfied correctly */
         if (!username || !password) return setResponse('please enter your details')
         let userRequest = {username, password}
