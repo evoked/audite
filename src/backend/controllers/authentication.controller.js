@@ -33,12 +33,11 @@ import jwt from 'jsonwebtoken'
 
 module.exports.authenticateToken = async (req, res, next) => {
     try {
-        // console.log(req.headers.authorization)
         const auth = req.headers.authorization
-        console.log(auth)
+
         const token = auth.split(' ')[1]
-        console.log(token)
-        if(token === "null") throw (new Error('no auth'))
+        if(token === "null" || token.length < 5) throw (new Error('no auth'))
+        console.log(`token success` + token)
         let {data} = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
         
         await User.findById(data, (err, user) => {
@@ -48,7 +47,7 @@ module.exports.authenticateToken = async (req, res, next) => {
         
         return next()
     } catch (e) {
-        return res.status(400).send(`${e}`)
+        return res.status(400).send(e)
     }
 }
 

@@ -109,7 +109,6 @@ module.exports.userById = async (req, res) => {
 module.exports.userList = async (req, res) => {
     let count = 0
     try {
-        console.log(req.session)
         const list = await User.find({}, 
             {_id: 1, username: 1, created: 1}, (err, users) => {
                 // eslint-disable-next-line no-unused-vars
@@ -118,7 +117,7 @@ module.exports.userList = async (req, res) => {
                 }
         })
         if(list) {            
-            return res.status(200).send({ data: list })
+            return res.status(200).send(list)
         } else {
             return res.status(404).send({ error: `users not found` })
         }

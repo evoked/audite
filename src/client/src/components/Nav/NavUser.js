@@ -21,6 +21,7 @@ const NavUser = () => {
                     <Link to="/">Home </Link>
                     <Link to="/users"> Users </Link>
                     <Link to="/profile"> Profile </Link>
+                    <Link to="/logout"> Profile </Link>
                     </nav> : <nav>
                     <Link to="/">Home </Link>
                     <Link to="/users"> Users </Link>
@@ -31,5 +32,5 @@ const NavUser = () => {
             </div>
         )
     }
-    
+
 export default NavUser;

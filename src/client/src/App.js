@@ -37,8 +37,9 @@ class App extends React.Component {
             <Route path="/user" component={UsersList} />
             <Route path="/users" component={UsersList} />
             <Route path="/login" component={UserLogin} />
+            <Route path="/logout" component={UserRegister} />
             <Route path="/register" component={UserRegister} />
-            <Route path="*" ><p>404: not found</p></Route>
+            <Route path="*" ><p className="pageNotFound">404: not found</p></Route>
         </Switch>
       </div>
     )

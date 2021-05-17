@@ -10,19 +10,22 @@ class UsersList extends React.Component {
     componentDidMount() {
         axios.get(`http://localhost:3001/users`)
             .then(res => {
-                this.setState({users: res.data.data})
+                console.log(res.data)
+                this.setState({users: res.data})
             })
     }
     
     render() {
         return (
             <div>
+                <h2>Total users: {this.state.users ? this.state.users.length : 0}</h2>
                 <ul>
-                    {this.state.users.map((element, key) => {
+                    {this.state.users ? 
+                    this.state.users.map((element, key) => {
                         return <li key={key}>{element.username} {element.created.slice(0,10)}</li> 
-                    }
-                )}
-            </ul>
+                    })
+                    : <p>loading...</p>}
+                </ul>
             </div>
         )
     }

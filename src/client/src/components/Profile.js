@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 
 const GetProfile = async () => {
     try {
-        // if(localStorage.getItem('token')) 
         const response = await axios.get('http://localhost:3001/profile', { 
             method: 'GET',
             headers: { Authorization: 'Bearer ' + localStorage.getItem('token') 

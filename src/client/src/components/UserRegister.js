@@ -6,7 +6,12 @@ const registerUser = async (user, response) => {
         url: 'http://localhost:3001/register',
         data: {...user}
     })
-    .then(res => response(res.data))
+    .then(res => {
+        response(res.data + ', redirecting...')
+        setTimeout(() => {
+            window.location.href="/login"
+        }, 3000)
+    })
     .catch(rej => response(rej.response.data))
 } 
 
@@ -15,12 +20,26 @@ const UserRegister = () => {
     const [user, setUser] = useState({ 
         username: '', 
         password: '', 
-        email: '',
+        email: ''
     })
+
+    const credentialVerification = () => {
+        if (user.username.length < 2 || user.username.length > 30) {
+            setResponse('username must be within 3-30 characters long') 
+            return false
+        } else if (user.password.length < 6) { 
+            setResponse('password must be longer than 6 characters')
+            return false
+        } else if (user.email.length < 6) {
+            setResponse('email must be valid')
+            return false
+        }
+        return true
+    }
 
     const handleSubmission = (e) => {
         e.preventDefault()
-        registerUser(user, setResponse)
+        if(credentialVerification()) registerUser(user, setResponse)
     }
 
     const handleUserInput = (e) => {
