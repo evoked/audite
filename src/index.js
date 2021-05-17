@@ -1,18 +1,16 @@
-// import App from './App';
 import express from 'express'
 import mongoose from 'mongoose'
 import session from 'express-session'
 import MongoStore from 'connect-mongo'
-// import React from 'react'
 import cors from 'cors'
 import path from 'path'
+
 import UserSchema from './backend/models/UserSchema.model'
 import userController from './backend/controllers/user.controller'
 import authController from './backend/controllers/authentication.controller'
 // import multer from 'multer'
 
 require("dotenv").config();
-// const { getProfile, authenticateToken, login, register, userByUsername, userList, userById } = require('./backend/controllers/user.controller')
 
 const app = express()
 app.use(express.urlencoded({extended: true}))
@@ -71,19 +69,4 @@ app.get('/user/:username', userController.userByUsername)
 // app.post('/api/forbidden', userController.authenticateToken)
 
 app.get('/profile', authController.authenticateToken, userController.getProfile)
-
-// app.all('*', function(req, res) {
-//   res.redirect('/login');
-// });
-
-// app.post('/login', (req, res) => {
-// })
-
-// app.route('/api/users').get(users)
-
-// app.listen(3001, () => console.log('server running...'))
-
-
-// ReactDOM.render(
-//   document.getElementById('root')
-// );
+app.post('/profile/deleteUser', authController.authenticateToken, userController.userDelete)

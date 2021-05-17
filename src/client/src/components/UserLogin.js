@@ -1,74 +1,86 @@
 import React, { useState } from 'react'
 import axios from 'axios'
-// import { render } from '@testing-library/react'
-// import { useState } from 'react'
 
-const UserLoginAuth = async (username, password, setResponse, token) => {
+const UserLoginAuth = async (user, setResponse, token) => {
     try {
         /* If localStorage already includes a token, then nothing is excecuted. */
-        if (localStorage.getItem('token')) return setResponse('already logged in')
+        if (localStorage.getItem('token')) { 
+            setResponse('already logged in, redirecting...')
+            return setTimeout(() => {
+                window.location.href="/"
+            }, 3000)
+        }
         /* check if details not satisfied correctly */
+        let {username, password} = user
         if (!username || !password) return setResponse('please enter your details')
-        let userRequest = {username, password}
 
         // ? {data: { username, password }}
         // : {headers: {authorization: token}}
 
-        let response = await axios.post('http://localhost:3001/login', {
-            ...userRequest
-        }).catch(res => {
-            /* If post has error (account does not exist or deta) */
-            UserLoginFail(res.data, setResponse)
-            return
+        await axios.post('http://localhost:3001/login', {
+            ...user
+        }).then(response =>{ 
+            /* If response is 201 (which it always should be on success,
+                just adding as a small measure), then add token to localStorage.
+                    window is then redirected to main page.*/
+            if (response.status === 201) {
+                UserLoginSuccess(response.data, setResponse)
+                setTimeout(() => {
+                    window.location.href="/"
+                }, 3000)
+            }
+        }).catch(err => {
+            /* If post has error (account does not exist or wrong credentials) then  */
+            UserLoginFail(err.response.data, setResponse)
         })
-        /* If response is 201, then set localStorage to token */
-        if (response.status === 201) UserLoginSuccess(response.data, setResponse) 
     } catch (e) {
-        // throw new Error(e.response.data.error)
         throw e
     }
 }
 
 const UserLoginSuccess = async (user, response) => {
-    try {
-        response('successfully logged in, redirecting...')
-        localStorage.setItem('token', user.token)
-    } catch (e) {
-        throw (new Error(e.response.data.error))
-    }
+    response(`${user.success}, redirecting...`)
+    localStorage.setItem('token', user.token)
 }
 
-const UserLoginFail = async (user, response) => {
-    try {
-        response('incorrect credentials, please try again')
-        localStorage.clear('token')
-    } catch (e) {
-        throw (new Error(e.response.data.error))
-    }
+const UserLoginFail = async (error, response) => {
+    response(`${error}, please try again`)
+    localStorage.clear('token')
 }
 
 const UserLogin = () => {
-    const [user, setUser] = useState('')
-    const [password, setPassword] = useState('')
     const [response, setResponse] = useState('')
+    const [user, setUser] = useState({ 
+        username: '', 
+        password: '', 
+    })
 
     const handleSubmission = (e) => {
         e.preventDefault()
-        UserLoginAuth(user, password, setResponse)
+        UserLoginAuth(user, setResponse)
     }
-    
-    // render() {
-        return (
-            <div>
-                <form onSubmit={handleSubmission}>
-                        <input type="text" placeholder="Username" value={user} onChange={e => setUser(e.target.value)}></input>
-                        <input type="text" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)}></input>
-                    <input type="submit" value="Submit" />
-                </form>
-                <p>{response}</p>
-            </div>
-        )
-    // }
+
+    const handleUserInput = (e) => {
+        /* Setting values, getting both input state parameter, and the sent value */
+        const {value, placeholder} = e.target
+        let param = placeholder.toLowerCase()
+        /* Setting the user using object manipulation */
+        setUser({
+            ...user,
+            [param]: value
+        })
+    }
+
+    return (
+        <div>
+            <form onSubmit={handleSubmission}>
+                    <input type="text" placeholder="Username" value={user.username} onChange={handleUserInput}></input>
+                    <input type="text" placeholder="Password" value={user.password} onChange={handleUserInput}></input>
+                <input type="submit" value="Submit" />
+            </form>
+            <p>{response}</p>
+        </div>
+    )
 }
 
 export default UserLogin

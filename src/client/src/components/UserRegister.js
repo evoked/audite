@@ -23,7 +23,7 @@ const UserRegister = () => {
         email: ''
     })
 
-    const credentialVerification = () => {
+    const userVerification = () => {
         if (user.username.length < 2 || user.username.length > 30) {
             setResponse('username must be within 3-30 characters long') 
             return false
@@ -39,13 +39,13 @@ const UserRegister = () => {
 
     const handleSubmission = (e) => {
         e.preventDefault()
-        if(credentialVerification()) registerUser(user, setResponse)
+        if(userVerification()) registerUser(user, setResponse)
     }
 
     const handleUserInput = (e) => {
         /* Setting values, getting both input state parameter, and the sent value */
-        const param = e.target.placeholder.toLowerCase()
-        const value = e.target.value
+        const {value, placeholder} = e.target
+        let param = placeholder.toLowerCase()
         /* Setting the user using object manipulation */
         setUser({
             ...user,

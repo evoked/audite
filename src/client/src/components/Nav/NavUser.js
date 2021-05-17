@@ -8,6 +8,7 @@ import {
 import UsersList from '../Users.js'
 import Profile from '../Profile.js'
 import UserLogin from '../UserLogin.js'
+import axios from 'axios';
 
 const NavUser = () => {
     const [auth, setAuth] = useState(false)
@@ -17,12 +18,15 @@ const NavUser = () => {
     }, [])
         return (
             <div>
-                {auth ? <nav>
+                {auth ? 
+                    <nav>
                     <Link to="/">Home </Link>
                     <Link to="/users"> Users </Link>
                     <Link to="/profile"> Profile </Link>
-                    <Link to="/logout"> Profile </Link>
-                    </nav> : <nav>
+                    {/* <Link to="/logout" onClick={userLogout} > Logout </Link> */}
+                    </nav> 
+                    : 
+                    <nav>
                     <Link to="/">Home </Link>
                     <Link to="/users"> Users </Link>
                     <Link to="/login"> Login</Link>

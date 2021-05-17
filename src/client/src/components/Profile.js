@@ -3,15 +3,34 @@ import React, { useEffect, useState } from 'react'
 
 const GetProfile = async () => {
     try {
-        const response = await axios.get('http://localhost:3001/profile', { 
+        /* Creating an axios GET request, using the authorization header to 
+            verify users authentication */
+        let response = await axios.get('http://localhost:3001/profile', { 
             method: 'GET',
             headers: { Authorization: 'Bearer ' + localStorage.getItem('token') 
-        }}).catch(e => {throw new Error('no auth')})
+        }}).catch(e => {
+            throw new Error('no auth')
+        })
         return response.data
     } catch (e) {
         throw e
     }
     // setUser(response.data)
+}
+
+const userLogout = async () => {
+    await axios({
+        method: 'GET',
+        url: 'http://localhost:3001/logout'
+    })
+    .then(res => {
+        localStorage.removeItem('token')
+        window.alert(res.data.message)
+        window.location.href="/login"
+    })
+    .catch(err => {
+        console.log(err.response)
+    })
 }
 
 const UserProfile = () => {
@@ -23,18 +42,25 @@ const UserProfile = () => {
         setAuth('loading...')
         GetProfile()
         .then(res => {
-            console.log('res')
             setAuth(true)
-            setUser(res.user)})
+            setUser(res.user)
+        })
         /* If error is thrown (no authentication), then auth will be kept false */
-        .catch(e => setAuth(`${e}`))
+        .catch(e => {
+            console.log(e)
+            setAuth(`${e}`)
+        })
     }, [])
 
     return(
         <div>
             <h2>Profile:</h2>
             {/* todo: seperate component views */}
-            <div>{user.username ? <p> {user.username} {user.created} {user.email}</p> : <p>{auth}</p>}</div>
+            <div className="userCard">{user.username ? 
+            <p> {user.username} {user.created} {user.email}<button onClick={userLogout}>Logout</button></p> 
+            
+            : 
+            <p>{auth}</p>}</div>
         </div>
     )
 }

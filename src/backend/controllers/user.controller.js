@@ -1,5 +1,5 @@
+import UserSchemaModel from '../models/UserSchema.model'
 import User from '../models/UserSchema.model'
-import CodeError from '../util/errorHandler.js'
 
 /**
  * Create new user based on user input from front-end.
@@ -48,13 +48,14 @@ import CodeError from '../util/errorHandler.js'
 module.exports.getProfile = async (req, res) => {
     // if(!res.locals.user) res.status(302).redirect('/')
     if(!req.headers.authorization) throw(new Error('no auth'))
-
     let user = res.locals.user
+    // console.log(user)
     
     try {
         if(!user) {
             throw (new Error('user not found'))
         }
+        console.log(user)
         return res.status(201).send({user: user})
     } catch (e) {
         console.log(e)
@@ -117,12 +118,28 @@ module.exports.userList = async (req, res) => {
                 }
         })
         if(list) {            
-            return res.status(200).send(list)
+            return res.status(200).send({list})
         } else {
             return res.status(404).send({ error: `users not found` })
         }
     } catch (e) {
         return res.status(400).send({ error: `${e}`})
+    }
+}
+
+module.exports.userDelete = async (req, res) => {
+    if(!req.headers.authorization) throw(new Error('no auth'))
+
+    let user = res.locals.user
+    console.log(user)
+    
+    try {
+        if(!user) {
+            throw (new Error('user not found'))
+        }
+        /* todo: delete current user *with auth* */
+    } catch (e) {
+
     }
 }
 

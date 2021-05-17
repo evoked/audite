@@ -10,8 +10,8 @@ class UsersList extends React.Component {
     componentDidMount() {
         axios.get(`http://localhost:3001/users`)
             .then(res => {
-                console.log(res.data)
-                this.setState({users: res.data})
+                // console.log(res.data)
+                this.setState({users: res.data.list})
             })
     }
     
