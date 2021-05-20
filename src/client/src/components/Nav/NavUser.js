@@ -19,11 +19,10 @@ const NavUser = () => {
         return (
             <div>
                 {auth ? 
-                    <nav>
+                    <nav className="flex text-center">
                     <Link to="/">Home </Link>
                     <Link to="/users"> Users </Link>
                     <Link to="/profile"> Profile </Link>
-                    {/* <Link to="/logout" onClick={userLogout} > Logout </Link> */}
                     </nav> 
                     : 
                     <nav>

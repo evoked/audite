@@ -2,24 +2,23 @@ let mongoose = require('mongoose')
 // import UserSchemaModel from './UserSchema.model'
 
 const PostSchema = new mongoose.Schema({
-    data: {
-        body: {
-            type: String,
-            trim: true
-        },
-        video_link: {
-            type: String,
-            trim: true
-        }
+    /* Creating the referral link between a post and user */
+    author: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
     },
-    details: {
-        user_id: {
-            type: String,
-            trim: true
-        },
-        date: {
-            type: Date,
-            default: Date.now
-        }
+    video_url: {
+        type: String,
+        trim: true
+    },
+    text_body: {
+        type: String,
+        trim: true
+    },
+    posted: {
+        type: Date,
+        default: Date.now
     }
 })
+
+export default mongoose.model('Post', PostSchema) 

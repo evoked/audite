@@ -16,12 +16,11 @@ const UserSchema = new mongoose.Schema({
     password: {
         type: String
     },
-    connections: {
-        type: String
-    }, posts: {
+    /* Creating the referral link between a user and their posts*/
+    posts: [{
         type: mongoose.Schema.Types.ObjectId, 
         ref: "Post"
-    }
+    }]
 })
 /**
  * Function that returns all date information as an object. Useful for date stuff!

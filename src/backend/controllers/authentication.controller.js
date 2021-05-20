@@ -18,22 +18,23 @@ import jwt from 'jsonwebtoken'
         if (!username || !password) throw (new Error('account details not satisfied'))
 
         await User.find({username: username, password: password})
+        /* If successfully found a user with credentials then go forward to .then statement */
         .then(user => {
+            /* Creating the token using JWT sign, converting the user's ID into a base64 encrypted string 
+                using the access token generated */
             const token = jwt.sign({data: user[0]._id}, process.env.ACCESS_TOKEN_SECRET)
+            /* ???????????????????????? VVVVVVVVVVVVVV */
             req.session.authorization = `Bearer ${token}`
+            console.log(`${username} has logged in @ ${req.connection.remoteAddress}`)
             res.status(201).send({token: token, success: `successfully logged in as '${user[0].username}'`})
             return
         })
         .catch(e => {
             if(e) throw new Error('user not found')
         })
-        /* If no returned users from (.find), then array user will be empty array */
         // if(user.length < 1) throw (new Error('user not found'))
-        /* Creating the token using JWT sign, converting the user's ID into a base64 encrypted string 
-            using the access token generated */
         
     } catch (e) {
-        console.log(e)
         return res.status(404).send('user not found')
     }
 }

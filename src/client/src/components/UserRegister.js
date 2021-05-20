@@ -57,8 +57,8 @@ const UserRegister = () => {
         <div>
             <form onSubmit={handleSubmission}>
                 <input type="text" placeholder="Username" value={user.username} onChange={handleUserInput}></input>
-                <input type="text" placeholder="Email"    value={user.email}    onChange={handleUserInput}></input>
                 <input type="text" placeholder="Password" value={user.password} onChange={handleUserInput}></input>
+                <input type="text" placeholder="Email"    value={user.email}    onChange={handleUserInput}></input>
                 <input type="submit" value="Submit" />
             </form>
             <p>{response}</p>

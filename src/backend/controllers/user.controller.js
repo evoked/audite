@@ -1,4 +1,3 @@
-import UserSchemaModel from '../models/UserSchema.model'
 import User from '../models/UserSchema.model'
 
 /**
@@ -23,7 +22,7 @@ import User from '../models/UserSchema.model'
         
         /*         
         If either the user or email have already been registered, return with error.
-        Intentionally only list one if both are true for security reasons. 
+            -  only list one if both are true for security reasons. 
         */ 
         if (userExists) {
             return res.status(400).send(`user ${username} already exists`)
@@ -37,7 +36,7 @@ import User from '../models/UserSchema.model'
             email: email,
             password: password
         })
-        console.log(user + ' successfully created')
+        console.log(`user ${user._doc.username} successfully created @ ${req.connection.remoteAddress}`)
         await user.save()
         return res.status(200).send(`user ${username} has been created`)
     } catch(e) {
