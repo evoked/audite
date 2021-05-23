@@ -1,10 +1,11 @@
 import axios from 'axios';
+import { Error } from 'mongoose';
 import React, { useState } from 'react';
 
-const userPostCreate = async (url, body) => {
+const userPostCreate = async (url, body, response) => {
     try {
-        isUrlValid(url)
-        let res = await axios('http://localhost:3001/post/new', {
+        await isUrlValid(url).catch(err => {throw err})
+        await axios('http://localhost:3001/post/new', {
             method: 'POST',
             headers: {
                 Authorization: 'Bearer ' + localStorage.getItem('token')
@@ -14,16 +15,25 @@ const userPostCreate = async (url, body) => {
                 body: body
             }
         })
+        .then(res => {
+            response('post created')
+            return res.data
+        })
         .catch(e => {throw new Error(e)})
-        return res.data
     } catch (e) {
-        return e.response
+        response(e.message)
+        return e
     }
 }
 
 const isUrlValid = async (url) => {
-    let x = await axios.get(`https://www.youtube.com/oembed?url=http%3A//www.youtube.com/watch%3Fv%${url}&format=json`)
-    console.log(x)
+    await axios.get(`http://www.youtube.com/oembed?url=http://www.youtube.com/watch?v=${url}&format=json`)
+    .then(res => {
+        return
+    })
+    .catch(rej => {
+        throw new Error('error, video does not exist, please make sure your link is entered correctly')
+    })
 }
 
 const CreatePost = () => {
@@ -48,7 +58,7 @@ const CreatePost = () => {
         setResponse('posting...')
         let parsedURL = video_url.slice(video_url.length - 11, video_url.length)
         console.log(parsedURL, post_body)
-        userPostCreate(parsedURL, post_body)
+        userPostCreate(parsedURL, post_body, setResponse)
     }
 
     const handleUserInput = (e) => {
