@@ -2,17 +2,18 @@ import React, { useState } from 'react';
 import axios from 'axios'
 
 const registerUser = async (user, response) => {
-    axios({method: 'POST',
-        url: 'http://localhost:3001/register',
-        data: {...user}
-    })
-    .then(res => {
+    axios.post('http://localhost:3001/register', 
+        user
+    ).then(res => {
         response(res.data + ', redirecting...')
         setTimeout(() => {
             window.location.href="/login"
         }, 3000)
+    }).catch(err =>{ 
+        console.log(err.response)
+        response(err.response.data.error)
     })
-    .catch(rej => response(rej.response.data))
+
 } 
 
 const UserRegister = () => {

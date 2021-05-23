@@ -1,3 +1,5 @@
+import PostSchemaModel from './PostSchema.model'
+
 let mongoose = require('mongoose')
 
 const UserSchema = new mongoose.Schema({
@@ -19,8 +21,9 @@ const UserSchema = new mongoose.Schema({
     /* Creating the referral link between a user and their posts*/
     posts: [{
         type: mongoose.Schema.Types.ObjectId, 
-        ref: "Post"
+        ref: 'Post'
     }]
+    // posts: [PostSchemaModel]
 })
 /**
  * Function that returns all date information as an object. Useful for date stuff!
@@ -38,4 +41,11 @@ UserSchema.methods.createdDetails = function() {
     }
 }
 
+UserSchema.methods.getDate = function() {
+    return {
+        year: this.created.getUTCFullYear(),
+        month: this.created.getUTCMonth(), 
+        date: this.created.getUTCDate(), 
+    }
+}
 export default mongoose.model('User', UserSchema) 

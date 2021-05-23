@@ -16,53 +16,56 @@ import jwt from 'jsonwebtoken'
     try {
         /* Checking server-side if login details are satisfied in order to continue with request */
         if (!username || !password) throw (new Error('account details not satisfied'))
-
+        console.log(`hi`)
         await User.find({username: username, password: password})
         /* If successfully found a user with credentials then go forward to .then statement */
         .then(user => {
+            console.log('hi' + user)
             /* Creating the token using JWT sign, converting the user's ID into a base64 encrypted string 
                 using the access token generated */
             const token = jwt.sign({data: user[0]._id}, process.env.ACCESS_TOKEN_SECRET)
             /* ???????????????????????? VVVVVVVVVVVVVV */
+            console.log(token + 'hello')
+            if(!token) {throw new Error('invalid auth')}
             req.session.authorization = `Bearer ${token}`
             console.log(`${username} has logged in @ ${req.connection.remoteAddress}`)
             res.status(201).send({token: token, success: `successfully logged in as '${user[0].username}'`})
             return
         })
         .catch(e => {
+            console.log(e)
             if(e) throw new Error('user not found')
         })
-        // if(user.length < 1) throw (new Error('user not found'))
         
     } catch (e) {
-        return res.status(404).send('user not found')
+        return res.status(401).json(e.message)
     }
 }
 
 module.exports.authenticateToken = async (req, res, next) => {
     try {
         const auth = req.headers.authorization
-
+        if(!auth) throw new Error('no auth header')
         const token = auth.split(' ')[1]
         /* If token is non-existant or has mistakenly been put into localStorage, then return error */
         if(token === "null" || token.length < 5) throw (new Error('no auth'))
         /* Process JWT verification using token passed by user, 
             will parse an error if the token is not valid */
         let {data} = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
-        
-        await User.findById(data, (err, user) => {
+        await User.findById(data)
+        .exec((err, user) => {
             if(!user || err) throw(new Error('user not found, token invalid'))
             /* Parsing user as a new object, because 'user' is a mongoose document, and cannot have any
-                properties dropped as a result. */
-            let userObj = user.toObject()
-            /* Dropping password into seperate variable */
-            let {password, __v, ...parsedUser} = userObj
+                properties dropped as a result. Allowing to drop password into seperate variable */
+            let {password, __v, ...parsedUser} = user.toObject()
+            // console.log(parsedUser)
             /* Setting locals to parsedUser, to be used in the next server-side service */
             res.locals.user = parsedUser
+            /* Directing to next middleware/service/controller */
+            return next()
         })
-        /* Directing to next middleware/service */
-        return next()
     } catch (e) {
+        console.log('error', e)
         return res.status(400).send(e)
     }
 }

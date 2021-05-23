@@ -4,10 +4,12 @@ import session from 'express-session'
 import MongoStore from 'connect-mongo'
 import cors from 'cors'
 import path from 'path'
+import { handler404 } from './backend/middleware/handler.js'
 
 import UserSchema from './backend/models/UserSchema.model'
 import userController from './backend/controllers/user.controller'
 import authController from './backend/controllers/authentication.controller'
+import postController from "./backend/controllers/posts.controller";
 // import multer from 'multer'
 
 require("dotenv").config();
@@ -19,8 +21,8 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use(cors())
 // app.use(multer)
 
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*, http://gdata.youtube.com/");
   res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
   next();
@@ -42,6 +44,7 @@ mongoose
     throw error
   })
 
+
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
@@ -53,20 +56,23 @@ app.use(session({
 }))
 
 app.get('/', (req, res) => {
-    res.send(`audite`)
-    console.log(req.session)
+  res.send(`audite`)
+  console.log(req.session)
 })
 
 app.post('/register', userController.register)
-app.get('/login', (req, res) => {
-  res.render('login.html')
-})
+app.get('/login')
 app.post('/login', authController.login)
 app.get('/logout', authController.logout)
 app.get('/users', userController.userList)
-app.get('/user/:username', userController.userByUsername)
-
+app.get('/user/:username', userController.getForeignProfile)
+app.get('/settings', authController.authenticateToken, userController.getSettings)
 // app.post('/api/forbidden', userController.authenticateToken)
+app.post('/post/new', authController.authenticateToken, postController.createPost)
 
-app.get('/profile', authController.authenticateToken, userController.getProfile)
 app.post('/profile/deleteUser', authController.authenticateToken, userController.userDelete)
+app.get('/post/new', (req,res) => {
+  res.send('hi')
+})
+
+// app.get('*', handler404)

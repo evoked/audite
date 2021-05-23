@@ -1,4 +1,5 @@
 import User from '../models/UserSchema.model'
+import Post from '../models/PostSchema.model'
 
 /**
  * Create new user based on user input from front-end.
@@ -10,24 +11,25 @@ import User from '../models/UserSchema.model'
 
  module.exports.register = async (req, res) => {
     try {
+        console.log(req.body)
         let {username, email, password} = req.body
         /* If any request body parameters were left out, return with error. */
         if (!username || !email || !password) {
-            return res.status(400).send(`account credentials not satisfied`)
+            throw new Error(`account credentials not satisfied`)
         }
 
         /* Using mongoDB API to return boolean whether the username or email already exist in the system. */
         const userExists = await User.exists({ username: username })
         const emailExists = await User.exists({ email: email })
-        
+
         /*         
         If either the user or email have already been registered, return with error.
             -  only list one if both are true for security reasons. 
         */ 
         if (userExists) {
-            return res.status(400).send(`user ${username} already exists`)
+            throw new Error(`user ${username} already exists`)
         } else if (emailExists) {
-            return res.status(400).send(`email ${email} already in use`)
+            throw new Error(`email ${email} already in use`)
         }
 
         /* Finally create new user, saved into db, returns with success */
@@ -36,29 +38,46 @@ import User from '../models/UserSchema.model'
             email: email,
             password: password
         })
-        console.log(`user ${user._doc.username} successfully created @ ${req.connection.remoteAddress}`)
+
+        console.log(`user ${username} successfully created @ ${req.connection.remoteAddress}`)
         await user.save()
         return res.status(200).send(`user ${username} has been created`)
-    } catch(e) {
-        return res.status(400).send(e)
-    }
+        } catch (e) {
+            console.log(e)
+            return res.status(400).json({error: e.message})
+        }
 }   
 
-module.exports.getProfile = async (req, res) => {
-    // if(!res.locals.user) res.status(302).redirect('/')
+module.exports.getSettings = async (req, res) => {
     if(!req.headers.authorization) throw(new Error('no auth'))
     let user = res.locals.user
-    // console.log(user)
-    
+
     try {
         if(!user) {
             throw (new Error('user not found'))
         }
-        console.log(user)
-        return res.status(201).send({user: user})
+        return res.status(201).json({user: user})
     } catch (e) {
         console.log(e)
-        return res.status(403).send(e)
+        return res.status(401).send(e)
+    }
+}
+
+module.exports.getForeignProfile = async (req, res) => {
+    // if(!res.locals.user) res.status(302).redirect('/')
+    const { username } = req.params
+    console.log(req.params)
+    try {
+        await User.findOne({username: username}).populate('posts')
+            .exec((err, user) => {
+                if(!user) return res.status(404).send({error: 'user not found'})
+                let {password, email, __v, ...parsedUser} = user.toObject()
+
+                return res.status(200).send(parsedUser)
+            })
+    } catch (e) {
+        console.log(e)
+        return res.status(404).send(e.message)
     }
 }
 

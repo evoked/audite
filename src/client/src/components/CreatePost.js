@@ -1,19 +1,29 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 
-const UserPostCreate = async (url, body) => {
+const userPostCreate = async (url, body) => {
     try {
-        let res = await axios.post('http://localhost:3001/post/new',{
-            headers: {authorization: 'Bearer ' + localStorage.getItem('token')},
+        isUrlValid(url)
+        let res = await axios('http://localhost:3001/post/new', {
+            method: 'POST',
+            headers: {
+                Authorization: 'Bearer ' + localStorage.getItem('token')
+            },
             data: {
-                url,
-                body
+                url: url,
+                body: body
             }
         })
+        .catch(e => {throw new Error(e)})
         return res.data
     } catch (e) {
-        throw new Error(e.response.data.error)
+        return e.response
     }
+}
+
+const isUrlValid = async (url) => {
+    let x = await axios.get(`https://www.youtube.com/oembed?url=http%3A//www.youtube.com/watch%3Fv%${url}&format=json`)
+    console.log(x)
 }
 
 const CreatePost = () => {
@@ -22,7 +32,8 @@ const CreatePost = () => {
 
     const handlePostSubmission = (e) => {
         e.preventDefault()
-        const { video_url, post_body } = post
+        let { video_url, post_body } = post
+        video_url = video_url.trim()
         /* Checking if URL is longer than YouTube video ID's */
         if((video_url.length < 11 || video_url.length > 64) || !video_url.includes('youtu')) {
             setResponse('! you must enter a valid URL !')
@@ -37,7 +48,7 @@ const CreatePost = () => {
         setResponse('posting...')
         let parsedURL = video_url.slice(video_url.length - 11, video_url.length)
         console.log(parsedURL, post_body)
-        // UserPostCreate(parsedURL, text_body)
+        userPostCreate(parsedURL, post_body)
     }
 
     const handleUserInput = (e) => {

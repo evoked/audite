@@ -2,19 +2,15 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 
 const GetProfile = async () => {
-    try {
         /* Creating an axios GET request, using the authorization header to 
             verify users authentication */
-        let response = await axios.get('http://localhost:3001/profile', { 
-            method: 'GET',
+    let response = await axios.get('http://localhost:3001/settings', { 
             headers: { Authorization: 'Bearer ' + localStorage.getItem('token') 
         }}).catch(e => {
             throw new Error('no auth')
         })
+        console.log(response)
         return response.data
-    } catch (e) {
-        throw e
-    }
     // setUser(response.data)
 }
 
@@ -43,6 +39,7 @@ const UserProfile = () => {
         GetProfile()
         .then(res => {
             setAuth(true)
+            console.log(res)
             setUser(res.user)
         })
         /* If error is thrown (no authentication), then auth will be kept false */
