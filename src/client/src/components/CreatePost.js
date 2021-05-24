@@ -4,7 +4,11 @@ import React, { useState } from 'react';
 
 const userPostCreate = async (url, body, response) => {
     try {
-        await isUrlValid(url).catch(err => {throw err})
+        /* Calling isUrlValid using url given by user, this function checks if the youtube video
+            supplied is real or not by calling the YouTube API  */
+        await isUrlValid(url)
+            .catch(err => {throw err})
+
         await axios('http://localhost:3001/post/new', {
             method: 'POST',
             headers: {

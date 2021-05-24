@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom'
+import YouTubeEmbed from './YouTubeEmbed';
 
 const getForeignUser = async (user, response) => {
     const res = await axios.get(`http://localhost:3001/user/${user}`)
@@ -11,24 +12,32 @@ const getForeignUser = async (user, response) => {
     if(res) return res.data
 }
 
-const buildJoinDate = (parsedDate) => {
-    let date = parsedDate.slice(0,10)
-    date = date.split('-')
-    date = `created at: ${date[0]} ${date[1]} ${date[2]}`
-    return date
-}
+
 
 const RenderUser = () => {
     let { username } = useParams()
     const [user, setUser] = useState({username: '', created: '', email: ''})
     const [response, setResponse] = useState('loading...')
+    const [page, setPage] = useState(0)
+    const [embeds, setEmbeds] = useState([])
+
+    const buildJoinDate = (parsedDate) => {
+        let date = parsedDate.slice(0,10)
+        date = date.split('-')
+        date = `created at: ${date[0]} ${date[1]} ${date[2]}`
+        return date
+    }
+
+    const renderPage = (pageNum) => {
+        
+    }
 
     useEffect(() => {
         getForeignUser(username, setResponse)
         .then(user => {
             if(user) setUser(user)
-            let x = buildJoinDate(user.created)
-            setUser({...user, created: x})
+            setUser({...user, created: buildJoinDate(user.created)})
+            user.posts.length < 1 ? setPage('user does not have any posts') : setPage(1)
         }).catch(err => {
             console.log(err)
         })
@@ -41,7 +50,12 @@ const RenderUser = () => {
                 <div>
                 <h2>{user.username}</h2>
                 <h3>{user.created}</h3>
-                {console.log(user)}
+                <ul>
+                {user.posts.map((post, key) => {
+                    return (<li key={key}><YouTubeEmbed embedId={post.video_url}/>{post.text_body}</li>)
+                })}
+                </ul>
+                {page}
                 </div>
                 
                 :

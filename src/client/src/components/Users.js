@@ -1,5 +1,6 @@
 import axios from 'axios'
 import React from 'react'
+import { Link, Redirect } from 'react-router-dom'
 
 class UsersList extends React.Component {
     constructor(props) {
@@ -14,6 +15,12 @@ class UsersList extends React.Component {
                 this.setState({users: res.data.list})
             })
     }
+
+    redirectHandler(user) {
+        // <Link to={user}>Check Profile</Link>
+        console.log(user)
+        return <Redirect to={user} />
+    }
     
     render() {
         return (
@@ -22,7 +29,8 @@ class UsersList extends React.Component {
                 <ul>
                     {this.state.users ? 
                     this.state.users.map((element, key) => {
-                        return <li key={key}>{element.username} {element.created.slice(0,10)}</li> 
+                        return <li key={key}>{element.username} {element.created.slice(0,10)} <Link to={element.username} className="btn btn-primary">Profile</Link>
+                        </li> 
                     })
                     : <p>loading...</p>}
                 </ul>

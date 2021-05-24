@@ -12,7 +12,7 @@ import UserLogin from './components/UserLogin.js'
 import NavUser from './components/Nav/NavUser.js'
 import UserRegister from './components/UserRegister.js'
 import CreatePost from './components/CreatePost.js'
-import RenderUser from './components/RenderUser.js'
+import RenderUser from './components/User/RenderUser.js'
 
 class App extends React.Component {
   render() {
@@ -20,6 +20,7 @@ class App extends React.Component {
       <div className="App">
           <NavUser />
           <Switch>
+            {/* <Route path="/" component={Home} /> */}
             <Route path="/settings" component={Profile} />
             <Route path="/user" component={UsersList} />
             <Route path="/users" component={UsersList} />
