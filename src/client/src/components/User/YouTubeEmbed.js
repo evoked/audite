@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 
 const YouTubeEmbed = ({ embedId }) => (
   <div className="video-responsive">
@@ -12,6 +13,9 @@ const YouTubeEmbed = ({ embedId }) => (
       allowFullScreen
       title="Embedded youtube"
     />
+    <p></p>
+    {console.log(`embed ${embedId}`)}
+    <Link to={{pathname: `https://www.youtube.com/watch?v=${embedId}`}} target="_blank">YouTube URL</Link>
   </div>
 );
 
