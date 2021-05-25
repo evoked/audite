@@ -9,7 +9,7 @@ import RenderEmbeds from './RenderEmbeds';
  * @param {String} response 
  * @returns {Object} user information
  */
-const getForeignUser = async (user, response) => {
+const getUser = async (user, response) => {
     /* HTTP get function to user location */
     const res = await axios.get(`http://localhost:3001/user/${user}`)
     /* Catches our promise rejection, then renders it onto the page by setting response */
@@ -72,7 +72,7 @@ const RenderUser = () => {
     /* Will only be ran on component mount, denoted by ([]) */
     useEffect(() => {
         /* Call using username URL param */
-        getForeignUser(username, setResponse)
+        getUser(username, setResponse)
         /* On promise fulfilment, use user data and push into user hook,
             conduct check on if the user has made any posts, and start to render them if true */
         .then(userData => {

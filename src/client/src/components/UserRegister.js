@@ -7,13 +7,12 @@ const registerUser = async (user, response) => {
     ).then(res => {
         response(res.data + ', redirecting...')
         setTimeout(() => {
-            window.location.href="/login"
+            window.location.href="/"
         }, 3000)
     }).catch(err =>{ 
         console.log(err.response)
         response(err.response.data.error)
     })
-
 } 
 
 const UserRegister = () => {

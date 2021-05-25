@@ -5,7 +5,7 @@ export const UserLoginAuth = async (user, setResponse) => {
     if (localStorage.getItem('token')) { 
         setResponse('already logged in, redirecting...')
         return setTimeout(() => {
-            window.location.href="/"
+            window.location.href="/home"
         }, 3000)
     }
     /* check if details not satisfied correctly */
@@ -24,7 +24,7 @@ export const UserLoginAuth = async (user, setResponse) => {
         if (response.status === 201) {
             UserLoginSuccess(response.data, setResponse)
             setTimeout(() => {
-                window.location.href="/"
+                window.location.href="/home"
             }, 3000)
         }
     }).catch(err => {
@@ -36,6 +36,8 @@ export const UserLoginAuth = async (user, setResponse) => {
 
 const UserLoginSuccess = async (user, response) => {
     response(`${user.success}, redirecting...`)
+    console.log(user)
+    localStorage.setItem('username', user.username)
     localStorage.setItem('token', user.token)
 }
 

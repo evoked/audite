@@ -1,7 +1,7 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 
-const GetProfile = async () => {
+const getProfile = async () => {
         /* Creating an axios GET request, using the authorization header to 
             verify users authentication */
     let response = await axios.get('http://localhost:3001/settings', { 
@@ -12,6 +12,15 @@ const GetProfile = async () => {
         console.log(response)
         return response.data
     // setUser(response.data)
+}
+
+const userDelete = async () => {
+    let response = await axios({
+        method: 'POST',
+        url: 'http://localhost:3001/settings/delete',
+        headers: {Authorization: 'Bearer ' + localStorage.getItem('token')}
+    }).catch(err => console.log(err.response))
+    return response.data
 }
 
 const userLogout = async () => {
@@ -36,10 +45,9 @@ const UserProfile = () => {
     /* On component load, try to get user personal profile */
     useEffect(() => {
         setAuth('loading...')
-        GetProfile()
+        getProfile()
         .then(res => {
             setAuth(true)
-            console.log(res)
             setUser(res.user)
         })
         /* If error is thrown (no authentication), then auth will be kept false */
@@ -53,9 +61,15 @@ const UserProfile = () => {
         <div>
             <h2>Profile:</h2>
             {/* todo: seperate component views */}
-            <div className="userCard">{user.username ? 
-            <p> {user.username} {user.created} {user.email}<button onClick={userLogout}>Logout</button></p> 
-            
+            <div className="userCard">
+                {
+                user.username ? 
+                    <p> {user.username} {user.created.slice(0,10)} {user.email}
+                    <button onClick={userLogout}>Logout</button> 
+                    <button onClick={() => {
+                        userDelete()
+                        userLogout()
+                    }}>Delete Account</button></p>
             : 
             <p>{auth}</p>}</div>
         </div>

@@ -4,12 +4,13 @@ import {
   Route,
 } from "react-router-dom"
 import UsersList from './components/Users.js'
-import Profile from './components/Profile.js'
+import Settings from './components/Settings.js'
 import UserLogin from './components/UserLogin.js'
 import NavUser from './components/Nav/NavUser.js'
 import UserRegister from './components/UserRegister.js'
 import CreatePost from './components/CreatePost.js'
 import RenderUser from './components/User/RenderUser.js'
+import UserHome from './components/UserHome/UserHome.js'
 
 class App extends React.Component {
   render() {
@@ -17,12 +18,11 @@ class App extends React.Component {
       <div className="App">
           <NavUser />
           <Switch>
-            {/* <Route path="/" component={Home} /> */}
-            <Route path="/settings" component={Profile} />
+            <Route exact path="/" component={UserLogin}/>
+            <Route path="/home" component={UserHome}/>
+            <Route path="/settings" component={Settings} />
             <Route path="/user" component={UsersList} />
             <Route path="/users" component={UsersList} />
-            <Route path="/login" component={UserLogin} />
-            <Route path="/logout" />
             <Route path="/register" component={UserRegister} />
             <Route path="/post/new" component={CreatePost} />
             <Route path="/:username/:pageId" component={RenderUser}/>

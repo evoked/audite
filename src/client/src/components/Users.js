@@ -16,12 +16,6 @@ class UsersList extends React.Component {
             })
     }
 
-    redirectHandler(user) {
-        // <Link to={user}>Check Profile</Link>
-        console.log(user)
-        return <Redirect to={user} />
-    }
-    
     render() {
         return (
             <div>

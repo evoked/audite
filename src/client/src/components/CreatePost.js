@@ -21,6 +21,7 @@ const userPostCreate = async (url, body, response) => {
         })
         .then(res => {
             response('post created')
+            window.location.href="/home"
             return res.data
         })
         .catch(e => {throw new Error(e)})
@@ -42,7 +43,7 @@ const isUrlValid = async (url) => {
 
 const CreatePost = () => {
     const [ post, setPost ] = useState({video_url: '', post_body: ''})
-    const [ response, setResponse] = useState('plea se enter a youtube URL, and the text you want to post along with it')
+    const [ response, setResponse] = useState('please enter a youtube URL, and the text you want to post along with it')
 
     const handlePostSubmission = (e) => {
         e.preventDefault()

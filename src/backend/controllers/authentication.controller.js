@@ -8,37 +8,31 @@ import jwt from 'jsonwebtoken'
  * @returns {token, message} returns JWT token
  */
  module.exports.login = async (req, res) => {
-    // const { authorization } = req.headers
-    // if(!auth) return res.status(401).send({ error: `not authorized` })#
-    
     const { username, password} = req.body
     
     try {
         /* Checking server-side if login details are satisfied in order to continue with request */
         if (!username || !password) throw (new Error('account details not satisfied'))
-        console.log(`hi`)
-        await User.find({username: username, password: password})
+        await User.findOne({username: username, password: password})
         /* If successfully found a user with credentials then go forward to .then statement */
         .then(user => {
-            console.log('hi' + user)
+            if(!user || user._id === undefined) {throw new Error('user not found')}
             /* Creating the token using JWT sign, converting the user's ID into a base64 encrypted string 
                 using the access token generated */
-            const token = jwt.sign({data: user[0]._id}, process.env.ACCESS_TOKEN_SECRET)
-            /* ???????????????????????? VVVVVVVVVVVVVV */
-            console.log(token + 'hello')
-            if(!token) {throw new Error('invalid auth')}
+            const token = jwt.sign({data: user._id}, process.env.ACCESS_TOKEN_SECRET)
+            if(!token || token.length === 0) {throw new Error('invalid auth')}
             req.session.authorization = `Bearer ${token}`
             console.log(`${username} has logged in @ ${req.connection.remoteAddress}`)
-            res.status(201).send({token: token, success: `successfully logged in as '${user[0].username}'`})
+            res.status(201).send({token: token, success: `successfully logged in as '${user.username}'`, username: user.username})
             return
         })
         .catch(e => {
             console.log(e)
-            if(e) throw new Error('user not found')
+            throw new Error('user not found')
         })
         
     } catch (e) {
-        return res.status(401).json(e.message)
+        return res.status(401).send(e.message)
     }
 }
 

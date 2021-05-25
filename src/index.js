@@ -4,7 +4,6 @@ import session from 'express-session'
 import MongoStore from 'connect-mongo'
 import cors from 'cors'
 import path from 'path'
-import { handler404 } from './backend/middleware/handler.js'
 
 import UserSchema from './backend/models/UserSchema.model'
 import userController from './backend/controllers/user.controller'
@@ -65,14 +64,10 @@ app.get('/login')
 app.post('/login', authController.login)
 app.get('/logout', authController.logout)
 app.get('/users', userController.userList)
-app.get('/user/:username', userController.getForeignProfile)
+app.get('/user/:username', userController.getProfile)
+app.get('/user/id/:id', userController.userById)
 app.get('/settings', authController.authenticateToken, userController.getSettings)
+app.post('/settings/delete', authController.authenticateToken, userController.delete)
 // app.post('/api/forbidden', userController.authenticateToken)
-app.post('/post/new', authController.authenticateToken, postController.createPost)
-
-app.post('/profile/deleteUser', authController.authenticateToken, userController.userDelete)
-app.get('/post/new', (req,res) => {
-  res.send('hi')
-})
-
-// app.get('*', handler404)
+app.post('/post/new', authController.authenticateToken, postController.create)
+app.post('/post/delete', authController.authenticateToken, postController.delete)

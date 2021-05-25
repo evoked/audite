@@ -1,7 +1,7 @@
 import User from "../models/UserSchema.model";
 import Post from "../models/PostSchema.model";
 
-module.exports.createPost = async (req, res) => {
+module.exports.create = async (req, res) => {
     const user = res.locals.user
     const { url, body } = req.body
     try {
@@ -32,6 +32,19 @@ module.exports.createPost = async (req, res) => {
     }
 }
 
-module.exports.removePost = async (req,res) => {
-    
+module.exports.delete = async (req,res) => {
+    const user = res.locals.user
+    const { _id } = req.body
+
+    try {
+        if(!_id || !user) throw new Error('you must include the post id')
+
+        await Post.findByIdAndDelete(_id, (err) => {
+            if (err) throw new Error('unable to find post')
+        })
+        
+        return res.status(201).send({message: "successfully deleted post"})
+    } catch (e) {
+        return res.status(401).send(e.message)
+    }
 }

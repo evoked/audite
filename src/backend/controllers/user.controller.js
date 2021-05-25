@@ -1,5 +1,6 @@
 import User from '../models/UserSchema.model'
 import Post from '../models/PostSchema.model'
+import UserRegister from '../../client/src/components/UserRegister'
 
 /**
  * Create new user based on user input from front-end.
@@ -46,7 +47,7 @@ import Post from '../models/PostSchema.model'
             console.log(e)
             return res.status(400).json({error: e.message})
         }
-}   
+}
 
 module.exports.getSettings = async (req, res) => {
     if(!req.headers.authorization) throw(new Error('no auth'))
@@ -63,7 +64,7 @@ module.exports.getSettings = async (req, res) => {
     }
 }
 
-module.exports.getForeignProfile = async (req, res) => {
+module.exports.getProfile = async (req, res) => {
     // if(!res.locals.user) res.status(302).redirect('/')
     const { username } = req.params
     console.log(req.params)
@@ -145,7 +146,7 @@ module.exports.userList = async (req, res) => {
     }
 }
 
-module.exports.userDelete = async (req, res) => {
+module.exports.delete = async (req, res) => {
     if(!req.headers.authorization) throw(new Error('no auth'))
 
     let user = res.locals.user
@@ -155,10 +156,21 @@ module.exports.userDelete = async (req, res) => {
         if(!user) {
             throw (new Error('user not found'))
         }
-        /* todo: delete current user *with auth* */
-    } catch (e) {
 
+        await User.deleteOne({_id: user._id}, (err) => {
+            if (err) throw new Error('could not delete user')
+        }).catch(err => {
+            if (err) throw new Error('could not')
+        })
+
+        await Post.deleteMany({author: user._id}, (err) => {
+                if (err) throw new Error('could not delete posts')
+        }).catch(err => {
+            if (err) throw new Error('could not')
+        })
+        console.log(user.username + 'has been deleted')
+        return res.status(200).send({message: 'user deleted'})
+    } catch (e) {
+        return res.status(401).send(e.message)
     }
 }
-
-/* export default { create, userByUsername, userList } */
