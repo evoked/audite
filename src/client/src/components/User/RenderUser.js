@@ -10,11 +10,14 @@ import RenderEmbeds from './RenderEmbeds';
  * @returns {Object} user information
  */
 const getForeignUser = async (user, response) => {
+    /* HTTP get function to user location */
     const res = await axios.get(`http://localhost:3001/user/${user}`)
+    /* Catches our promise rejection, then renders it onto the page by setting response */
     .catch(err => {
         response(err.response.data.error)
         return err.response.data.error
     })
+    /* If user is valid (not null) return their data */
     if(res) return res.data
 }
 
