@@ -26,6 +26,7 @@ const UserLogin = () => {
 
     return (
         <div>
+            <h3>Login</h3>
             <form onSubmit={handleLoginSubmission}>
                 <input type="text" placeholder="Username" value={user.username} onChange={handleUserInput}></input>
                 <input type="text" placeholder="Password" value={user.password} onChange={handleUserInput}></input>

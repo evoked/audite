@@ -1,6 +1,7 @@
 import axios from 'axios'
 import React from 'react'
-import { Link, Redirect } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import { getUserList } from '../services/user'
 
 class UsersList extends React.Component {
     constructor(props) {
@@ -9,7 +10,7 @@ class UsersList extends React.Component {
     }
 
     componentDidMount() {
-        axios.get(`http://localhost:3001/users`)
+        getUserList()
             .then(res => {
                 // console.log(res.data)
                 this.setState({users: res.data.list})

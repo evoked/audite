@@ -1,19 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios'
-
-const registerUser = async (user, response) => {
-    axios.post('http://localhost:3001/register', 
-        user
-    ).then(res => {
-        response(res.data + ', redirecting...')
-        setTimeout(() => {
-            window.location.href="/"
-        }, 3000)
-    }).catch(err =>{ 
-        console.log(err.response)
-        response(err.response.data.error)
-    })
-} 
+import { registerUser } from '../services/user';
 
 const UserRegister = () => {
     const [response, setResponse] = useState('')

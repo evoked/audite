@@ -8,7 +8,7 @@ import Settings from './components/Settings.js'
 import UserLogin from './components/UserLogin.js'
 import NavUser from './components/Nav/NavUser.js'
 import UserRegister from './components/UserRegister.js'
-import CreatePost from './components/CreatePost.js'
+import CreatePost from './components/UserHome/CreatePost.js'
 import RenderUser from './components/User/RenderUser.js'
 import UserHome from './components/UserHome/UserHome.js'
 

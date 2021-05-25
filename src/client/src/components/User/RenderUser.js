@@ -1,25 +1,8 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom'
+import { getUser } from '../../services/user';
 import RenderEmbeds from './RenderEmbeds';
-
-/**
- * Contacts API to gather information about user 'user', and sets response to an error if one is thrown
- * @param {Object} user 
- * @param {String} response 
- * @returns {Object} user information
- */
-const getUser = async (user, response) => {
-    /* HTTP get function to user location */
-    const res = await axios.get(`http://localhost:3001/user/${user}`)
-    /* Catches our promise rejection, then renders it onto the page by setting response */
-    .catch(err => {
-        response(err.response.data.error)
-        return err.response.data.error
-    })
-    /* If user is valid (not null) return their data */
-    if(res) return res.data
-}
 
 const RenderUser = () => {
     /* Retrieving user parsed URL parameters, and pushing into new variables */

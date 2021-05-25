@@ -1,45 +1,5 @@
-import axios from 'axios';
-import { Error } from 'mongoose';
 import React, { useState } from 'react';
-
-const userPostCreate = async (url, body, response) => {
-    try {
-        /* Calling isUrlValid using url given by user, this function checks if the youtube video
-            supplied is real or not by calling the YouTube API  */
-        await isUrlValid(url)
-            .catch(err => {throw err})
-
-        await axios('http://localhost:3001/post/new', {
-            method: 'POST',
-            headers: {
-                Authorization: 'Bearer ' + localStorage.getItem('token')
-            },
-            data: {
-                url: url,
-                body: body
-            }
-        })
-        .then(res => {
-            response('post created')
-            window.location.href="/home"
-            return res.data
-        })
-        .catch(e => {throw new Error(e)})
-    } catch (e) {
-        response(e.message)
-        return e
-    }
-}
-
-const isUrlValid = async (url) => {
-    await axios.get(`http://www.youtube.com/oembed?url=http://www.youtube.com/watch?v=${url}&format=json`)
-    .then(res => {
-        return
-    })
-    .catch(rej => {
-        throw new Error('error, video does not exist, please make sure your link is entered correctly')
-    })
-}
+import { userPostCreate } from '../../services/post';
 
 const CreatePost = () => {
     const [ post, setPost ] = useState({video_url: '', post_body: ''})
@@ -55,14 +15,13 @@ const CreatePost = () => {
             return
         }
         /* Checking if body is too long */
-        if(post_body.length > 64) {
-            setResponse('! text body cannot be longer than 64 characters !')
+        if(post_body.length > 120) {
+            setResponse('! text body cannot be longer than 120 characters !')
             return
         }
         
         setResponse('posting...')
         let parsedURL = video_url.slice(video_url.length - 11, video_url.length)
-        console.log(parsedURL, post_body)
         userPostCreate(parsedURL, post_body, setResponse)
     }
 
@@ -74,7 +33,6 @@ const CreatePost = () => {
             ...post,
             [param]: value
         })
-        console.log(post)
     }
 
         return (

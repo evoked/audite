@@ -16,9 +16,8 @@ require("dotenv").config();
 const app = express()
 app.use(express.urlencoded({extended: true}))
 app.use(express.json())
-app.use(express.static(path.join(__dirname, 'public')))
+// app.use(express.static(path.join(__dirname, 'public')))
 app.use(cors())
-// app.use(multer)
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
@@ -54,20 +53,20 @@ app.use(session({
   }
 }))
 
-app.get('/', (req, res) => {
-  res.send(`audite`)
-  console.log(req.session)
-})
-
+/* Login/register routing */
 app.post('/register', userController.register)
-app.get('/login')
 app.post('/login', authController.login)
 app.get('/logout', authController.logout)
+
+/* User call routing */
 app.get('/users', userController.userList)
 app.get('/user/:username', userController.getProfile)
 app.get('/user/id/:id', userController.userById)
+
+/* Local user settings' routing with authentication */
 app.get('/settings', authController.authenticateToken, userController.getSettings)
 app.post('/settings/delete', authController.authenticateToken, userController.delete)
-// app.post('/api/forbidden', userController.authenticateToken)
+
+/* Local user post routing with authentication */
 app.post('/post/new', authController.authenticateToken, postController.create)
 app.post('/post/delete', authController.authenticateToken, postController.delete)
