@@ -9,6 +9,7 @@ const UserRegister = () => {
         email: ''
     })
 
+    /* Checking whether  */
     const userVerification = () => {
         if (user.username.length < 2 || user.username.length > 30) {
             setResponse('username must be within 3-30 characters long') 
@@ -16,7 +17,7 @@ const UserRegister = () => {
         } else if (user.password.length < 6) { 
             setResponse('password must be longer than 6 characters')
             return false
-        } else if (user.email.length < 6) {
+        } else if (user.email.length < 6 || !user.email.includes("@")) {
             setResponse('email must be valid')
             return false
         }
@@ -41,6 +42,7 @@ const UserRegister = () => {
 
     return (
         <div>
+            <h3>Register</h3>
             <form onSubmit={handleSubmission}>
                 <input type="text" placeholder="Username" value={user.username} onChange={handleUserInput}></input>
                 <input type="text" placeholder="Password" value={user.password} onChange={handleUserInput}></input>

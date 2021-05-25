@@ -44,7 +44,7 @@ const isUrlValid = async (url) => {
  * Deletes post called on current user button press by calling API endpoint
  * @param {Object} post 
  */
-const deletePost = async (event, post) => {
+const deletePost = async (e, post) => {
     axios({
         method: 'POST',
         url: 'http://localhost:3001/post/delete',

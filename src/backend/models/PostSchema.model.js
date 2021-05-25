@@ -1,5 +1,4 @@
 let mongoose = require('mongoose')
-// import UserSchemaModel from './UserSchema.model'
 
 const PostSchema = new mongoose.Schema({
     /* Creating the referral link between a post and user */

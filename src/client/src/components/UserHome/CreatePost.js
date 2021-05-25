@@ -11,12 +11,12 @@ const CreatePost = () => {
         video_url = video_url.trim()
         /* Checking if URL is longer than YouTube video ID's */
         if((video_url.length < 11 || video_url.length > 64) || !video_url.includes('youtu')) {
-            setResponse('! you must enter a valid URL !')
+            setResponse('you must enter a valid URL')
             return
         }
         /* Checking if body is too long */
-        if(post_body.length > 120) {
-            setResponse('! text body cannot be longer than 120 characters !')
+        if(post_body.length > 240) {
+            setResponse('text body cannot be longer than 240 characters')
             return
         }
         

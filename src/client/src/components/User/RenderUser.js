@@ -1,4 +1,3 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom'
 import { getUser } from '../../services/user';
@@ -91,7 +90,7 @@ const RenderUser = () => {
                                 {/* Page increment as buttons, on user click, will redirect to respective page */}
                                 <button className="btn-page-select" onClick={() => pageIterator(pageId, 'decrement')}>Previous</button>
                                 {/* Render current page number as text */}
-                                Page: {pageId}
+                                {`  Page: ${pageId}  `}
                                 <button className="btn-page-select" onClick={() => pageIterator(pageId, 'increment')}>Next</button>
                             </div>
                         </div>
