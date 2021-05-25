@@ -18,6 +18,11 @@ const UserSchema = new mongoose.Schema({
     password: {
         type: String
     },
+    biography: {
+        type: String,
+        trim: true,
+        maxLength: 120
+    },
     /* Creating the referral link between a user and their posts*/
     posts: [{
         type: mongoose.Schema.Types.ObjectId, 

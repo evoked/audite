@@ -29,7 +29,8 @@ class UsersList extends React.Component {
                 <ul>
                     {this.state.users ? 
                     this.state.users.map((element, key) => {
-                        return <li key={key}>{element.username} {element.created.slice(0,10)} <Link to={element.username} className="btn btn-primary">Profile</Link>
+                        return <li key={key}>
+                            <Link to={() => `${element.username}/1`}  className="btn btn-primary">{element.username}</Link> created on: {element.created.slice(0,10)}
                         </li> 
                     })
                     : <p>loading...</p>}

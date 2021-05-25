@@ -1,10 +1,7 @@
 import React from 'react'
-import axios from 'axios'
 import {
-  BrowserRouter as Router,
   Switch,
   Route,
-  Link
 } from "react-router-dom"
 import UsersList from './components/Users.js'
 import Profile from './components/Profile.js'
@@ -28,7 +25,7 @@ class App extends React.Component {
             <Route path="/logout" />
             <Route path="/register" component={UserRegister} />
             <Route path="/post/new" component={CreatePost} />
-            <Route path="/:username" component={RenderUser}/>
+            <Route path="/:username/:pageId" component={RenderUser}/>
             <Route path="*" ><p className="pageNotFound">404: not found</p></Route>
         </Switch>
       </div>

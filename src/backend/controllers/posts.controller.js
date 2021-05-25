@@ -30,6 +30,8 @@ module.exports.createPost = async (req, res) => {
         console.log(e)
         return res.status(401).send(e)
     }
+}
 
-
+module.exports.removePost = async (req,res) => {
+    
 }

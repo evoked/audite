@@ -1,14 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
     Link
   } from "react-router-dom"
-import UsersList from '../Users.js'
-import Profile from '../Profile.js'
-import UserLogin from '../UserLogin.js'
-import axios from 'axios';
 
 const NavUser = () => {
     const [auth, setAuth] = useState(false)
