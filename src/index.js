@@ -3,13 +3,11 @@ import mongoose from 'mongoose'
 import session from 'express-session'
 import MongoStore from 'connect-mongo'
 import cors from 'cors'
-import path from 'path'
 
 import UserSchema from './backend/models/UserSchema.model'
 import userController from './backend/controllers/user.controller'
 import authController from './backend/controllers/authentication.controller'
 import postController from "./backend/controllers/posts.controller";
-// import multer from 'multer'
 
 require("dotenv").config();
 
@@ -27,7 +25,7 @@ app.use((req, res, next) => {
 });
 
 const PORT = process.env.PORT || 3001
-const uri = `mongodb+srv://js:3213215@merncluster.eacb3.mongodb.net/audite?retryWrites=true&w=majority`
+const uri = `mongodb+srv://${process.env.MONGO}@merncluster.eacb3.mongodb.net/audite?retryWrites=true&w=majority`
 const options = { useNewUrlParser: true, useUnifiedTopology: true }
 
 mongoose.set("useFindAndModify", false)

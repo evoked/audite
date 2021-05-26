@@ -1,6 +1,5 @@
 import User from '../models/UserSchema.model'
 import Post from '../models/PostSchema.model'
-import UserRegister from '../../client/src/components/UserRegister'
 
 /**
  * Create new user based on user input from front-end.
