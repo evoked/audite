@@ -1,4 +1,4 @@
-open terminal or cmd, make sure you have git installed, then run this command:
+open terminal or cmd, [make sure you have git installed](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git), and then run this command:
 > `git clone http://github.com/evoked/audite`
 
 then to install project dependencies
