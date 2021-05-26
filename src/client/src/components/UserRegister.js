@@ -9,7 +9,7 @@ const UserRegister = () => {
         email: ''
     })
 
-    /* Checking whether  */
+    /* Checking if user has entered valid details */
     const userVerification = () => {
         if (user.username.length < 2 || user.username.length > 30) {
             setResponse('username must be within 3-30 characters long') 

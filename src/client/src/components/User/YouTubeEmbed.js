@@ -16,7 +16,10 @@ const YouTubeEmbed = ({ embedId }) => (
       frameBorder="0"
       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
       allowFullScreen
-      title="Embedded youtube"
+      color="white"
+      modestbranding="1"
+      fs="0"
+      title="Embedded YouTube player"
     />
     <p></p>
   </div>
