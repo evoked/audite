@@ -130,7 +130,7 @@ module.exports.userList = async (req, res) => {
     let count = 0
     try {
         const list = await User.find({}, 
-            {_id: 1, username: 1, created: 1}, (err, users) => {
+            {_id: 1, username: 1, created: 1, posts: 1}, (err, users) => {
                 // eslint-disable-next-line no-unused-vars
                 for(let user in users) {
                     count++

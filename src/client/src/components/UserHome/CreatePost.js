@@ -26,9 +26,10 @@ const CreatePost = () => {
     }
 
     const handleUserInput = (e) => {
+        /* Gathering html tag values */
         const {value, name} = e.target
         let param = name.toLowerCase()
-        /* Setting the user using object manipulation */
+        /* Setting the user using object manipulation, spread syntax */
         setPost({
             ...post,
             [param]: value

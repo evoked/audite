@@ -6,6 +6,7 @@ class RenderEmbeds extends Component {
     constructor(props) {
         /* Setting whatever was passed to component as props to class props */
         super(props)
+        /* Using array as state allows use of value mapping with .map */
         this.state = { renderPosts: [] }
     }
 
@@ -25,7 +26,8 @@ class RenderEmbeds extends Component {
         this.setState({renderPosts: posts})
     }
 
-    /* Rendering embedded YouTube player, along with the post details, and a link to the YouTube video*/
+    /* Rendering embedded YouTube player component, along with the post details, 
+        and a link to the YouTube video*/
     render() {
         return(<div className="user-post">
             {this.state.renderPosts[0] ? 

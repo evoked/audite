@@ -25,7 +25,7 @@ class UsersList extends React.Component {
                     /* Mapping data to HTML elements to show all registered users*/
                     this.state.users.map((element, key) => {
                         return <li key={key}>
-                            <Link to={() => `${element.username}/1`}  className="btn btn-primary">{element.username}</Link> created on: {element.created.slice(0,10)}
+                            <Link to={() => `${element.username}/1`}  className="btn btn-primary">{element.username}</Link> created on: {element.created.slice(0,10)} post count: {element.posts.length}
                         </li> 
                     })
                     : <p>loading...</p>}
