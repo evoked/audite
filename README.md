@@ -1,6 +1,6 @@
 open terminal or cmd, make sure you have git installed, then run this command:
-`git clone http://github.com/evoked/audite`
+> `git clone http://github.com/evoked/audite`
 then to install project dependencies
-`cd audite && npm install && cd src/client && npm install`
+> `cd audite && npm install && cd src/client && npm install`
 then to run the project, make sure you're in the `/audite` directory and run:
-`npm start`
+> `npm start`
