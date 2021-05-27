@@ -16,7 +16,7 @@ class UserHome extends Component {
         /* Calling API to gather local user information */
         getLocalUser(localStorage.getItem("username"))
             .then(user => {
-                this.setState({...this.state, user: user.data})
+                this.setState({...this.state, user: {...user.data, posts: user.data.posts.reverse()}})
                 console.log(this.state)
                 /* Conditional check to see if user has made any posts */
                 this.state.user.posts.length > 0 ? 

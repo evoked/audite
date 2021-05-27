@@ -55,7 +55,7 @@ module.exports.authenticateToken = async (req, res, next) => {
             // console.log(parsedUser)
             /* Setting locals to parsedUser, to be used in the next server-side service */
             res.locals.user = parsedUser
-            /* Directing to next middleware/service/controller */
+            /* Directing to next middleware/controller */
             return next()
         })
     } catch (e) {

@@ -3,7 +3,7 @@ import { userPostCreate } from '../../services/post';
 
 const CreatePost = () => {
     const [ post, setPost ] = useState({video_url: '', post_body: ''})
-    const [ response, setResponse] = useState('please enter a youtube URL, and the text you want to post along with it')
+    const [ response, setResponse] = useState('please enter a youtube music video URL, and the text you want to go along with it')
 
     const handlePostSubmission = (e) => {
         e.preventDefault()
@@ -15,8 +15,8 @@ const CreatePost = () => {
             return
         }
         /* Checking if body is too long */
-        if(post_body.length > 240) {
-            setResponse('text body cannot be longer than 240 characters')
+        if(post_body.length > 300) {
+            setResponse('text body cannot be longer than 300 characters')
             return
         }
         

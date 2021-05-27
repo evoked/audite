@@ -58,7 +58,7 @@ const RenderUser = () => {
         /* On promise fulfilment, use user data and push into user hook,
             conduct check on if the user has made any posts, and start to render them if true */
         .then(userData => {
-            if(userData) setUser({...userData, created: buildJoinDate(userData.created)})
+            if(userData) setUser({...userData, created: buildJoinDate(userData.created), posts: userData.posts.reverse()})
             userData.posts.length > 0 ? setHasPosts(true) : setResponse('user has no posts...')
         })
         /* Catches promise rejection, this will only occur on no user being found */

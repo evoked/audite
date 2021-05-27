@@ -61,10 +61,10 @@ app.get('/users', userController.userList)
 app.get('/user/:username', userController.getProfile)
 app.get('/user/id/:id', userController.userById)
 
-/* Local user settings' routing with authentication */
+/* Local user settings' routing with authentication middleware */
 app.get('/settings', authController.authenticateToken, userController.getSettings)
 app.post('/settings/delete', authController.authenticateToken, userController.delete)
 
-/* Local user post routing with authentication */
+/* Local user post routing with authentication middleware */
 app.post('/post/new', authController.authenticateToken, postController.create)
 app.post('/post/delete', authController.authenticateToken, postController.delete)
