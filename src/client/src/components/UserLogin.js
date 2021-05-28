@@ -5,7 +5,7 @@ const UserLogin = () => {
     const [response, setResponse] = useState('')
     const [user, setUser] = useState({ 
         username: '', 
-        password: '', 
+        password: '' 
     })
 
     const handleLoginSubmission = (e) => {

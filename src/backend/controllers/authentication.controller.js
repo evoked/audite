@@ -2,7 +2,8 @@ import User from '../models/UserSchema.model'
 import jwt from 'jsonwebtoken'
 
 /**
- * zzz
+ * Allows user to login if details are correct, 
+ * passes the client a token to use with authenticated routes.
  * @param {*} req 
  * @param {*} res 
  * @returns {token, message} returns JWT token
@@ -66,8 +67,6 @@ module.exports.authenticateToken = async (req, res, next) => {
 
 module.exports.logout = async (req, res) => {
     try {
-        // console.log(`${res.locals} ${req.session.authorization}`)
-        // if (!req.session.authorization || !req.headers.authorization) throw (new Error('you are not logged in'))
         /* Setting everything to null so user auth is no longer feasible until next logged in */
         console.log(req.session.authorization, req.session.headers)
         res.locals.user = null

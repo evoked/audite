@@ -64,7 +64,6 @@ module.exports.getSettings = async (req, res) => {
 }
 
 module.exports.getProfile = async (req, res) => {
-    // if(!res.locals.user) res.status(302).redirect('/')
     const { username } = req.params
     console.log(req.params)
     try {

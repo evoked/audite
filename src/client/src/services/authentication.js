@@ -28,7 +28,6 @@ export const UserLoginAuth = async (user, setResponse) => {
             }, 3000)
         }
     }).catch(err => {
-        console.log(err.message)
         /* If post has error (account does not exist or wrong credentials) then  */
         UserLoginFail(err.response.data.error, setResponse)
     })
@@ -42,6 +41,6 @@ const UserLoginSuccess = async (user, response) => {
 }
 
 const UserLoginFail = async (error, response) => {
-    response(`${error}, please try again`)
+    response(`invalid credentials, please try again`)
     localStorage.clear('token')
 }

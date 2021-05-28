@@ -4,7 +4,6 @@ import session from 'express-session'
 import MongoStore from 'connect-mongo'
 import cors from 'cors'
 
-import UserSchema from './backend/models/UserSchema.model'
 import userController from './backend/controllers/user.controller'
 import authController from './backend/controllers/authentication.controller'
 import postController from "./backend/controllers/posts.controller";
@@ -12,14 +11,15 @@ import postController from "./backend/controllers/posts.controller";
 require("dotenv").config();
 
 const app = express()
+
 app.use(express.urlencoded({extended: true}))
 app.use(express.json())
-// app.use(express.static(path.join(__dirname, 'public')))
 app.use(cors())
 
+/* https://stackoverflow.com/a/38259193 */
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+  res.header("Access-Control-Allow-Methods", "GET, HEAD, OPTIONS, POST, PUT");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
   next();
 });
@@ -41,14 +41,15 @@ mongoose
   })
 
 
-app.use(session({
-  secret: process.env.SESSION_SECRET,
-  resave: false,
-  saveUninitialized: true,
-  store: MongoStore.create({mongoUrl: uri, mongoOptions: options}),
-  cookie: {
-    maxAge: 1000 * 60 * 60 * 24
-  }
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    store: MongoStore.create({mongoUrl: uri, mongoOptions: options}),
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24
+    }
 }))
 
 /* Login/register routing */
@@ -56,7 +57,7 @@ app.post('/register', userController.register)
 app.post('/login', authController.login)
 app.get('/logout', authController.logout)
 
-/* User call routing */
+/* User routing */
 app.get('/users', userController.userList)
 app.get('/user/:username', userController.getProfile)
 app.get('/user/id/:id', userController.userById)

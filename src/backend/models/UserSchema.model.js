@@ -28,7 +28,6 @@ const UserSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Post'
     }]
-    // posts: [PostSchemaModel]
 })
 /**
  * Function that returns all date information as an object. Useful for date stuff!

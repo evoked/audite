@@ -24,6 +24,9 @@ class UserHome extends Component {
                 this.setState({...this.state, response: `or, make some changes to your posts?`}) :
                 this.setState({...this.state, response: `you don't seem to have any posts, you should add some!`})
             })
+            .catch(err => {
+                window.location.href="/"
+            })
     }
 
     render() {
